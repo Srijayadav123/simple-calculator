@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: simple-calculator
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: simple-calculator
@@ -13,8 +13,8 @@ spec:
         app: simple-calculator
     spec:
       containers:
-      - name: calculator
-        image: your-dockerhub-username/simple-calculator:REPLACE_TAG
-        imagePullPolicy: IfNotPresent
+      - name: simple-calculator
+        image: srijayadav/simple-calculator:latest
         ports:
         - containerPort: 3000
+
