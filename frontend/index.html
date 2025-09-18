@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Simple Calculator</h2>
+    <input type="number" id="num1" placeholder="Enter number 1">
+    <input type="number" id="num2" placeholder="Enter number 2">
+    <select id="operator">
+      <option value="+">+</option>
+      <option value="-">-</option>
+      <option value="*">*</option>
+      <option value="/">/</option>
+    </select>
+    <button onclick="calculate()">Calculate</button>
+    <p id="result"></p>
+
+    <h3>History</h3>
+    <ul id="history"></ul>
+  </div>
+
+  <script>
+    async function calculate() {
+      const num1 = parseFloat(document.getElementById("num1").value);
+      const num2 = parseFloat(document.getElementById("num2").value);
+      const operator = document.getElementById("operator").value;
+
+      const response = await fetch("/api/calc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ num1, num2, operator })
+      });
+      const data = await response.json();
+      document.getElementById("result").innerText = "Result: " + data.result;
+      loadHistory();
+    }
+
+    async function loadHistory() {
+      const response = await fetch("/api/history");
+      const history = await response.json();
+      const historyList = document.getElementById("history");
+      historyList.innerHTML = "";
+      history.forEach(h => {
+        const li = document.createElement("li");
+        li.textContent = `${h.num1} ${h.operator} ${h.num2} = ${h.result}`;
+        historyList.appendChild(li);
+      });
+    }
+    loadHistory();
+  </script>
+</body>
+</html>
